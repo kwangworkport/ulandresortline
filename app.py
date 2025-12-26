@@ -85,8 +85,8 @@ def handle_postback(event):
                     text="☕ ULand Coffee\nพร้อมเสิร์ฟความอร่อยทุกวัน 💛\nเปิดให้บริการเวลา 07.00 - 17.00 น.\nโทร 📞 094-7802363"
                 ),
                 ImageSendMessage(
-                    original_content_url=f"{BASE_URL()}/static/images/menu.jpg",
-                    preview_image_url=f"{BASE_URL()}/static/images/menu.jpg",
+                    original_content_url=f"{BASE_URL()}/static/images/menu.JPG",
+                    preview_image_url=f"{BASE_URL()}/static/images/menu.JPG",
                 ),
                 ImageSendMessage(
                     original_content_url=f"{BASE_URL()}/static/images/special1.png",

@@ -6,7 +6,8 @@ from linebot import LineBotApi, WebhookParser
 from linebot.models import (
     TextSendMessage,
     ImageSendMessage,
-    FlexSendMessage
+    FlexSendMessage,
+    TextMessage
 )
 
 # =====================
@@ -24,12 +25,16 @@ if not CHANNEL_SECRET or not ACCESS_TOKEN:
 # APP INIT
 # =====================
 app = FastAPI()
-
-# 👇 สำคัญมาก: mount static
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 line_bot_api = LineBotApi(ACCESS_TOKEN)
 parser = WebhookParser(CHANNEL_SECRET)
+
+# =====================
+# BASE URL (Render)
+# =====================
+def BASE_URL():
+    return "https://ulandresortline.onrender.com"
 
 # =====================
 # HEALTH CHECK
@@ -51,128 +56,362 @@ async def webhook(request: Request, x_line_signature: str = Header(None)):
         raise HTTPException(status_code=400, detail="Invalid signature")
 
     for event in events:
+
+        # =====================
+        # POSTBACK (Rich Menu / Card Button)
+        # =====================
         if event.type == "postback":
-            action = event.postback.data
+            handle_postback(event)
 
-            # -----------------
-            # Uland Coffee (รูป + ข้อความ)
-            # -----------------
-            if action == "coffee":
-                line_bot_api.reply_message(
-                    event.reply_token,
-                    [
-                         TextSendMessage(
-                            text="☕ ULand Coffee \nพร้อมเสิร์ฟความอร่อยทุกวัน 💛 \nเปิดให้บริการเวลา 07.00 - 17.00 น. \n\nสั่ง กาแฟ น้ำ ขนม ได้ที่นี่เลยค่ะหรือโทร 📞 094-7802363"
-                        ),
-                        ImageSendMessage(
-                            original_content_url=f"{BASE_URL()}/static/images/coffee.jpg",
-                            preview_image_url=f"{BASE_URL()}/static/images/coffee.jpg"
-                        )
-                    ]
-                )
-
-            # -----------------
-            # Location
-            # -----------------
-            elif action == "location":
-                line_bot_api.reply_message(
-                    event.reply_token,
-                    TextSendMessage(
-                        text="📍 แผนที่ Uland Resort\nhttps://maps.google.com/?q=YOUR_LOCATION"
-                    )
-                )
-
-            # -----------------
-            # Contact / FAQ
-            # -----------------
-            elif action == "contact":
-                line_bot_api.reply_message(
-                    event.reply_token,
-                    TextSendMessage(
-                        text=(
-                            "📞 ติดต่อสอบถาม\n"
-                            "โทร: 08x-xxx-xxxx\n\n"
-                            "⏰ เช็กอิน: 14:00\n"
-                            "⏰ เช็กเอาต์: 12:00\n\n"
-                            "พิมพ์คำถามได้เลยครับ 😊"
-                        )
-                    )
-                )
-
-            # -----------------
-            # ประเภทห้องพัก (Card โรงแรม)
-            # -----------------
-            elif action in ["room_price", "rooms"]:
-                line_bot_api.reply_message(
-                    event.reply_token,
-                    FlexSendMessage(
-                        alt_text="ประเภทห้องพัก",
-                        contents=hotel_cards()
-                    )
-                )
-
-            # -----------------
-            # ปุ่มจาก Card
-            # -----------------
-            elif action == "room_detail":
-                line_bot_api.reply_message(
-                    event.reply_token,
-                    TextSendMessage(
-                        text=(
-                            "🛎 รายละเอียดห้องพักโซน \"เติมสุข\"\n"
-                            "• แอร์\n• เครื่องทำน้ำอุ่น\n• Wi-Fi\n"
-                            "• ทีวี\n• ตู้เย็น\n• ที่จอดรถ"
-                        )
-                    )
-                )
-
-            elif action == "book_room":
-                line_bot_api.reply_message(
-                    event.reply_token,
-                    TextSendMessage(
-                        text="📅 ต้องการจองห้องพัก\nพิมพ์:\nจอง + วันที่เข้าพัก + จำนวนคืน"
-                    )
-                )
-
-            # -----------------
-            # DEFAULT
-            # -----------------
-            else:
-                line_bot_api.reply_message(
-                    event.reply_token,
-                    TextSendMessage(text=f"ไม่รู้จักเมนู: {action}")
-                )
+        # =====================
+        # TEXT MESSAGE (พิมพ์เอง)
+        # =====================
+        elif event.type == "message" and isinstance(event.message, TextMessage):
+            handle_text(event)
 
     return {"ok": True}
 
 # =====================
-# BASE URL (Render)
+# POSTBACK HANDLER
 # =====================
-def BASE_URL():
-    # 👉 ใส่โดเมน Render ของคุณตรงนี้
-    return "https://uland-linebot.onrender.com"
+def handle_postback(event):
+    action = event.postback.data
+
+    if action == "coffee":
+        line_bot_api.reply_message(
+            event.reply_token,
+            [
+                TextSendMessage(
+                    text="☕ ULand Coffee\nพร้อมเสิร์ฟความอร่อยทุกวัน 💛\nเปิดให้บริการเวลา 07.00 - 17.00 น.\nโทร 📞 094-7802363"
+                ),
+                ImageSendMessage(
+                    original_content_url=f"{BASE_URL()}/static/images/menu.jpg",
+                    preview_image_url=f"{BASE_URL()}/static/images/menu.jpg",
+                ),
+                ImageSendMessage(
+                    original_content_url=f"{BASE_URL()}/static/images/special1.png",
+                    preview_image_url=f"{BASE_URL()}/static/images/special1.png",
+                ),
+                ImageSendMessage(
+                    original_content_url=f"{BASE_URL()}/static/images/special2.png",
+                    preview_image_url=f"{BASE_URL()}/static/images/special2.png",
+                ),
+                ImageSendMessage(
+                    original_content_url=f"{BASE_URL()}/static/images/special.png",
+                    preview_image_url=f"{BASE_URL()}/static/images/special.png",
+                ),
+            ]
+        )
+
+    elif action in ["room_price", "rooms"]:
+        send_room_card(event)
+
+    elif action == "location":
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(
+                text="📍 แผนที่ Uland Resort\nhttps://maps.app.goo.gl/UQ4tG2kCCdW2E9em8"
+            )
+        )
+
+    elif action == "contact":
+        profile = line_bot_api.get_profile(event.source.user_id)
+        nickname = profile.display_name
+
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(
+               f"คุณ {nickname} ต้องการสอบถามเรื่องอะไรดีคะ 😊\n"
+                "สามารถพิมพ์ 👉🏻หมายเลข👈🏻 เรื่องที่ต้องการสอบถามได้เลยค่ะ\n\n"
+                "1. ประเภทและราคาห้องพัก\n"
+                "2. รูปภาพรีสอร์ทและห้องพัก\n"
+                "3. แผนที่รีสอร์ท\n"
+                "4. รหัส Wi-Fi\n"
+                "5. เมนูร้าน ULand Coffee"
+            )
+        )
+
+    # ===== ROOM DETAIL =====
+    #สุขใจ 550
+    elif action == "room_detail_sj":
+        line_bot_api.reply_message(
+            event.reply_token,
+            [
+                TextSendMessage(
+                    text=(
+                        "💖💖 ห้องพักโซนสุขใจ 550 บาท/คืน 💖💖\n"
+                        "สิ่งอำนวยความสะดวกภายในห้องพัก\n"
+                        "- ผ้าม่านโปร่งแสง\n"
+                        "- เครื่องทำน้ำอุ่น\n"
+                        "- ผ้าเช็ดตัว\n"
+                        "- แอร์\n"
+                        "- โต๊ะทำงาน\n"
+                        "- ตู้เย็น\n"
+                        "- ตู้เสื้อผ้า\n"
+                        "- บริการลานจอดรถ\n"
+                        "\n"
+                        "สิ่งอำนวยความสะดวกภายในรีสอร์ท\n"
+                        "- ร้านอาหาร\n"
+                        "- ร้านคาเฟ่\n"
+                        "- ร้านซักอบรีด\n"
+                        "- ร้านยา\n"
+                    )
+                ),
+                ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/สุขใจ 1.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/สุขใจ 1.jpg",
+                ),
+                ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/สุขใจ 2.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/สุขใจ 2.jpg",
+                ),
+                ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/สุขใจ 3.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/สุขใจ 3.jpg",
+                ),
+            ]
+        )
+    
+    #เติทสุข 590
+    elif action == "room_detail_ts":
+        line_bot_api.reply_message(
+            event.reply_token,
+            [
+                TextSendMessage(
+                    text=(
+                        "💖💖 ห้องพักโซนเติมสุข 590 บาท/คืน 💖💖\n"
+                        "สิ่งอำนวยความสะดวกภายในห้องพัก\n"
+                        "- ผ้าม่านโปร่งแสง\n"
+                        "- เครื่องทำน้ำอุ่น\n"
+                        "- ผ้าเช็ดตัว\n"
+                        "- แอร์\n"
+                        "- โต๊ะทำงาน\n"
+                        "- ตู้เย็น\n"
+                        "- ตู้เสื้อผ้า\n"
+                        "- ที่จอดรถหน้าบ้าน\n"
+                        "\n"
+                        "สิ่งอำนวยความสะดวกภายในรีสอร์ท\n"
+                        "- ร้านอาหาร\n"
+                        "- ร้านคาเฟ่\n"
+                        "- ร้านซักอบรีด\n"
+                        "- ร้านยา\n"
+                    )
+                ),
+                ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/เติมสุข A 1.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/เติมสุข A 1.jpg",
+                ),
+                ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/เติมสุข A 2.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/เติมสุข A 2.jpg",
+                ),
+                ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/เติมสุด A 3.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/เติมสุด A 3.jpg",
+                ),
+                ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/เติมสุข A 4.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/เติมสุข A 4.jpg",
+                ),
+            ]
+        )
+        user_id = event.source.user_id
+
+        line_bot_api.push_message(
+            user_id,
+            ImageSendMessage(
+                original_content_url=f"{BASE_URL()}/static/images/เติมสุข A 5.jpg",
+                preview_image_url=f"{BASE_URL()}/static/images/เติมสุข A 5.jpg",
+            )
+        )
+    #ก่อสุข 690
+    elif action == "room_detail_ks":
+        line_bot_api.reply_message(
+            event.reply_token,
+            [
+                TextSendMessage(
+                    text=(
+                        "💖💖 ห้องพักโซนก่อสุข 690 บาท/คืน 💖💖\n"
+                        "สิ่งอำนวยความสะดวกภายในห้องพัก\n"
+                        "- ระเบียงหลังบ้าน\n"
+                        "- ผ้าม่านโปร่งแสง\n"
+                        "- เครื่องทำน้ำอุ่น\n"
+                        "- ผ้าเช็ดตัว\n"
+                        "- แอร์\n"
+                        "- โต๊ะทำงาน\n"
+                        "- ตู้เย็น\n"
+                        "- ตู้เสื้อผ้า\n"
+                        "- ที่จอดรถหน้าบ้าน\n"
+                        "\n"
+                        "สิ่งอำนวยความสะดวกภายในรีสอร์ท\n"
+                        "- ร้านอาหาร\n"
+                        "- ร้านคาเฟ่\n"
+                        "- ร้านซักอบรีด\n"
+                        "- ร้านยา\n"
+                    )
+                ),
+                ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/ก่อสุข 1.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/ก่อสุข 1.jpg",
+                ),
+                ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/ก่อสุข 2.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/ก่อสุข 2.jpg",
+                ),
+                ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/ก่อสุข 3.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/ก่อสุข 3.jpg",
+                ),
+                ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/ก่อสุข 4.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/ก่อสุข 4.jpg",
+                ),
+            ]
+        )
+        user_id = event.source.user_id
+
+        line_bot_api.push_message(
+            user_id,
+            ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/ก่อสุข 5.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/ก่อสุข 5.jpg",
+            ),
+        )
+
+
+    # elif action == "room_detail":
+    #     line_bot_api.reply_message(
+    #         event.reply_token,
+    #         TextSendMessage(
+    #             text="🛎 ห้องพักมี แอร์ / น้ำอุ่น / Wi-Fi / ทีวี / ตู้เย็น"
+    #         )
+    #     )
+
+    elif action == "book_room":
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(
+                text="กรุุณารอสักครู่ระบบกำลังติดต่อแอดมิน"
+            )
+        )
 
 # =====================
-# FLEX CARD HOTEL
+# TEXT HANDLER (พิมพ์เลข)
 # =====================
+def handle_text(event):
+    text = event.message.text.strip().lower()
+
+    # 1 = ห้องพัก
+    if text in ["1", "1.", "ราคา", "ประเภทและราคาห้องพัก"]:
+        send_room_card(event)
+
+    # 2 = รูปที่พัก
+    elif text in ["2", "2.", "รูปภาพที่พัก"]:
+        line_bot_api.reply_message(
+            event.reply_token,
+            [
+                ImageSendMessage(
+                    original_content_url=f"{BASE_URL()}/static/images/วิว 1.jpg",
+                    preview_image_url=f"{BASE_URL()}/static/images/วิว 1.jpg",
+                ),
+                ImageSendMessage(
+                    original_content_url=f"{BASE_URL()}/static/images/วิว 2.jpg",
+                    preview_image_url=f"{BASE_URL()}/static/images/วิว 2.jpg",
+                ),
+                ImageSendMessage(
+                    original_content_url=f"{BASE_URL()}/static/images/วิว 3.jpg",
+                    preview_image_url=f"{BASE_URL()}/static/images/วิว 3.jpg",
+                ),
+            ]
+        )
+
+    # 3 = แผนที่
+    elif text in ["3", "3.", "แผนที่รีสอร์ท"]:
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(
+                text="📍 https://maps.app.goo.gl/UQ4tG2kCCdW2E9em8"
+            )
+        )
+
+    # 4 = wifi
+    elif text in ["4", "4.", "wifi", "รหัส wifi"]:
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(
+                text="Wi-Fi: U Land Resort\nPassword: 92330000"
+            )
+        )
+
+    # 5 = coffee
+    elif text in ["5", "5.", "coffee", "uland coffee"]:
+        line_bot_api.reply_message(
+            event.reply_token,
+            [
+                TextSendMessage(
+                    text="☕ ULand Coffee\nพร้อมเสิร์ฟความอร่อยทุกวัน 💛\nเปิดให้บริการเวลา 07.00 - 17.00 น.\nโทร 📞 094-7802363"
+                    ),
+                    ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/menu.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/menu.jpg",
+                    ),
+                    ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/special1.png",
+                        preview_image_url=f"{BASE_URL()}/static/images/special1.png",
+                    ),
+                    ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/special2.png",
+                        preview_image_url=f"{BASE_URL()}/static/images/special2.png",
+                    ),
+                    ImageSendMessage(
+                        original_content_url=f"{BASE_URL()}/static/images/special.png",
+                        preview_image_url=f"{BASE_URL()}/static/images/special.png",
+                    ),
+            ]
+        )
+
+# =====================
+# ROOM CARD
+# =====================
+def send_room_card(event):
+    line_bot_api.reply_message(
+        event.reply_token,
+        FlexSendMessage(
+            alt_text="ประเภทห้องพัก",
+            contents=hotel_cards()
+        )
+    )
+
 def hotel_cards():
     return {
         "type": "carousel",
         "contents": [
             room_card(
-                title='ห้องพักโซน "เติมสุข"',
-                price="590 บาท / คืน",
-                image_url=f"{BASE_URL()}/static/images/room1.jpg"
+                title='ห้องพักโซน "สุขใจ"',
+                price="550 บาท / คืน",
+                image_url=f"{BASE_URL()}/static/images/สุขใจ 2.jpg",
+                detail_data="room_detail_sj",
+                book_data="book_room"
             ),
             room_card(
-                title="ห้อง Deluxe",
-                price="890 บาท / คืน",
-                image_url=f"{BASE_URL()}/static/images/room2.jpg"
+                title='ห้องพักโซน "เติมสุข"',
+                price="590 บาท / คืน",
+                image_url=f"{BASE_URL()}/static/images/เติมสุด A 3.jpg",
+                detail_data="room_detail_ts",
+                book_data="book_room"
+            ),
+            room_card(
+                title="ห้อง ก่อสุข",
+                price="690 บาท / คืน",
+                image_url=f"{BASE_URL()}/static/images/ก่อสุข 4.jpg",
+                detail_data="room_detail_ks",
+                book_data="book_room"
             )
         ]
     }
 
-def room_card(title, price, image_url):
+
+def room_card(title, price, image_url, detail_data, book_data):
     return {
         "type": "bubble",
         "hero": {
@@ -186,17 +425,8 @@ def room_card(title, price, image_url):
             "type": "box",
             "layout": "vertical",
             "contents": [
-                {
-                    "type": "text",
-                    "text": title,
-                    "weight": "bold",
-                    "size": "lg"
-                },
-                {
-                    "type": "text",
-                    "text": price,
-                    "color": "#666666"
-                }
+                {"type": "text", "text": title, "weight": "bold", "size": "lg"},
+                {"type": "text", "text": price, "color": "#666666"}
             ]
         },
         "footer": {
@@ -208,7 +438,7 @@ def room_card(title, price, image_url):
                     "action": {
                         "type": "postback",
                         "label": "ข้อมูลเพิ่มเติม",
-                        "data": "room_detail"
+                        "data": detail_data
                     }
                 },
                 {
@@ -217,7 +447,7 @@ def room_card(title, price, image_url):
                     "action": {
                         "type": "postback",
                         "label": "จองห้องพัก",
-                        "data": "book_room"
+                        "data": book_data
                     }
                 }
             ]

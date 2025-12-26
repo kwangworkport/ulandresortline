@@ -97,8 +97,8 @@ def handle_postback(event):
                     preview_image_url=f"{BASE_URL()}/static/images/special2.png",
                 ),
                 ImageSendMessage(
-                    original_content_url=f"{BASE_URL()}/static/images/special.png",
-                    preview_image_url=f"{BASE_URL()}/static/images/special.png",
+                    original_content_url=f"{BASE_URL()}/static/images/special.JPG",
+                    preview_image_url=f"{BASE_URL()}/static/images/special.JPG",
                 ),
             ]
         )

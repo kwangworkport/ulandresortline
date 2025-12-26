@@ -363,11 +363,16 @@ def handle_text(event):
                         original_content_url=f"{BASE_URL()}/static/images/special2.png",
                         preview_image_url=f"{BASE_URL()}/static/images/special2.png",
                     ),
-                    ImageSendMessage(
+            ]
+        )
+        user_id = event.source.user_id
+
+        line_bot_api.push_message(
+            user_id,
+            ImageSendMessage(
                         original_content_url=f"{BASE_URL()}/static/images/special.JPG",
                         preview_image_url=f"{BASE_URL()}/static/images/special.JPG",
-                    ),
-            ]
+            ),
         )
 
 # =====================
@@ -401,7 +406,7 @@ def hotel_cards():
                 book_data="book_room"
             ),
             room_card(
-                title="ห้อง ก่อสุข",
+                title='ห้องพักโซน "ก่อสุข"',
                 price="690 บาท / คืน",
                 image_url=f"{BASE_URL()}/static/images/KS_4.jpg",
                 detail_data="room_detail_ks",

@@ -9,6 +9,7 @@ from linebot.models import (
     FlexSendMessage,
     TextMessage
 )
+from linebot.models import QuickReply, QuickReplyButton, MessageAction
 
 # =====================
 # LOAD ENV
@@ -382,12 +383,31 @@ def handle_text(event):
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(
-                f"คุณ {nickname} ต้องการสอบถามเรื่องอะไรดีคะ 😊\n"
+                f"คุณ {nickname} ต้องการสอบถามเรื่องอะไรดีคะ สามารถพิมพ์หมายเลขหรือกดที่เมนูด้านล่างได้เลยค่ะ 😊\n"
                 "1. ประเภทและราคาห้องพัก\n"
                 "2. รูปภาพรีสอร์ทและห้องพัก\n"
                 "3. แผนที่รีสอร์ท\n"
                 "4. รหัส Wi-Fi\n"
                 "5. เมนูร้าน ULand Coffee"
+            ),
+            quick_reply=QuickReply(
+                items=[
+                    QuickReplyButton(
+                        action=MessageAction(label="💰 ประเภทและราคาห้องพัก", text="1")
+                    ),
+                    QuickReplyButton(
+                        action=MessageAction(label="🖼 รูปภาพที่พัก", text="2")
+                    ),
+                    QuickReplyButton(
+                        action=MessageAction(label="📍 แผนที่รีสอร์ท", text="3")
+                    ),
+                    QuickReplyButton(
+                        action=MessageAction(label="📶 รหัส Wi-Fi", text="4")
+                    ),
+                    QuickReplyButton(
+                        action=MessageAction(label="☕ ULand Coffee", text="5")
+                    ),
+                ]
             )
         )
         user_id = event.source.user_id

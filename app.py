@@ -330,7 +330,7 @@ def handle_text(event):
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(
-                text="📍 https://maps.app.goo.gl/UQ4tG2kCCdW2E9em8"
+                text="📍ยูแลนด์รีสอร์ท ULand Resort \n https://maps.app.goo.gl/UQ4tG2kCCdW2E9em8"
             )
         )
 
@@ -364,8 +364,8 @@ def handle_text(event):
                         preview_image_url=f"{BASE_URL()}/static/images/special2.png",
                     ),
                     ImageSendMessage(
-                        original_content_url=f"{BASE_URL()}/static/images/special.png",
-                        preview_image_url=f"{BASE_URL()}/static/images/special.png",
+                        original_content_url=f"{BASE_URL()}/static/images/special.JPG",
+                        preview_image_url=f"{BASE_URL()}/static/images/special.JPG",
                     ),
             ]
         )
@@ -377,7 +377,7 @@ def send_room_card(event):
     line_bot_api.reply_message(
         event.reply_token,
         FlexSendMessage(
-            alt_text="ประเภทห้องพัก",
+            alt_text="ประเภทและราคาห้องพัก",
             contents=hotel_cards()
         )
     )

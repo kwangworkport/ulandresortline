@@ -389,7 +389,15 @@ def handle_text(event):
                 "3. แผนที่รีสอร์ท\n"
                 "4. รหัส Wi-Fi\n"
                 "5. เมนูร้าน ULand Coffee",
-                
+
+            )
+        )
+        user_id = event.source.user_id
+
+        line_bot_api.push_message(
+            user_id,
+            TextSendMessage(
+                "หากต้องการติดต่อสอบถามเรื่องอื่นๆ สามารถทิ้งข้อความไว้ได้เลยค่ะแอดมินจะติดต่อกลับโดยเร็วที่สุด\n\nติดต่อด่วน โทร 062-8899824 , 065-7546414 , (หลัง 22.00 น. 094-7802363)",
                 quick_reply=QuickReply(
                     items=[
                         QuickReplyButton(
@@ -409,14 +417,6 @@ def handle_text(event):
                         ),
                     ]
                 )
-            )
-        )
-        user_id = event.source.user_id
-
-        line_bot_api.push_message(
-            user_id,
-            TextSendMessage(
-                "หากต้องการติดต่อสอบถามเรื่องอื่นๆ สามารถทิ้งข้อความไว้ได้เลยค่ะแอดมินจะติดต่อกลับโดยเร็วที่สุด\n\nติดต่อด่วน โทร 062-8899824 , 065-7546414 , (หลัง 22.00 น. 094-7802363)"
             ),
         )
         return

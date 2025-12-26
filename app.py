@@ -158,16 +158,16 @@ def handle_postback(event):
                     )
                 ),
                 ImageSendMessage(
-                        original_content_url=f"{BASE_URL()}/static/images/สุขใจ 1.jpg",
-                        preview_image_url=f"{BASE_URL()}/static/images/สุขใจ 1.jpg",
+                        original_content_url=f"{BASE_URL()}/static/images/SJ_1.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/SJ_1.jpg",
                 ),
                 ImageSendMessage(
-                        original_content_url=f"{BASE_URL()}/static/images/สุขใจ 2.jpg",
-                        preview_image_url=f"{BASE_URL()}/static/images/สุขใจ 2.jpg",
+                        original_content_url=f"{BASE_URL()}/static/images/SJ_2.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/SJ_2.jpg",
                 ),
                 ImageSendMessage(
-                        original_content_url=f"{BASE_URL()}/static/images/สุขใจ 3.jpg",
-                        preview_image_url=f"{BASE_URL()}/static/images/สุขใจ 3.jpg",
+                        original_content_url=f"{BASE_URL()}/static/images/SJ_3.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/SJ_3.jpg",
                 ),
             ]
         )
@@ -198,20 +198,20 @@ def handle_postback(event):
                     )
                 ),
                 ImageSendMessage(
-                        original_content_url=f"{BASE_URL()}/static/images/เติมสุข A 1.jpg",
-                        preview_image_url=f"{BASE_URL()}/static/images/เติมสุข A 1.jpg",
+                        original_content_url=f"{BASE_URL()}/static/images/TS_1.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/TS_1.jpg",
                 ),
                 ImageSendMessage(
-                        original_content_url=f"{BASE_URL()}/static/images/เติมสุข A 2.jpg",
-                        preview_image_url=f"{BASE_URL()}/static/images/เติมสุข A 2.jpg",
+                        original_content_url=f"{BASE_URL()}/static/images/TS_2.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/TS_2.jpg",
                 ),
                 ImageSendMessage(
-                        original_content_url=f"{BASE_URL()}/static/images/เติมสุด A 3.jpg",
-                        preview_image_url=f"{BASE_URL()}/static/images/เติมสุด A 3.jpg",
+                        original_content_url=f"{BASE_URL()}/static/images/TS_3.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/TS_3.jpg",
                 ),
                 ImageSendMessage(
-                        original_content_url=f"{BASE_URL()}/static/images/เติมสุข A 4.jpg",
-                        preview_image_url=f"{BASE_URL()}/static/images/เติมสุข A 4.jpg",
+                        original_content_url=f"{BASE_URL()}/static/images/TS_4.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/TS_4.jpg",
                 ),
             ]
         )
@@ -220,8 +220,8 @@ def handle_postback(event):
         line_bot_api.push_message(
             user_id,
             ImageSendMessage(
-                original_content_url=f"{BASE_URL()}/static/images/เติมสุข A 5.jpg",
-                preview_image_url=f"{BASE_URL()}/static/images/เติมสุข A 5.jpg",
+                original_content_url=f"{BASE_URL()}/static/images/TS_5.jpg",
+                preview_image_url=f"{BASE_URL()}/static/images/TS_5.jpg",
             )
         )
     #ก่อสุข 690
@@ -251,20 +251,20 @@ def handle_postback(event):
                     )
                 ),
                 ImageSendMessage(
-                        original_content_url=f"{BASE_URL()}/static/images/ก่อสุข 1.jpg",
-                        preview_image_url=f"{BASE_URL()}/static/images/ก่อสุข 1.jpg",
+                        original_content_url=f"{BASE_URL()}/static/images/KS_1.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/KS_1.jpg",
                 ),
                 ImageSendMessage(
-                        original_content_url=f"{BASE_URL()}/static/images/ก่อสุข 2.jpg",
-                        preview_image_url=f"{BASE_URL()}/static/images/ก่อสุข 2.jpg",
+                        original_content_url=f"{BASE_URL()}/static/images/KS_2.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/KS_2.jpg",
                 ),
                 ImageSendMessage(
-                        original_content_url=f"{BASE_URL()}/static/images/ก่อสุข 3.jpg",
-                        preview_image_url=f"{BASE_URL()}/static/images/ก่อสุข 3.jpg",
+                        original_content_url=f"{BASE_URL()}/static/images/KS_3.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/KS_3.jpg",
                 ),
                 ImageSendMessage(
-                        original_content_url=f"{BASE_URL()}/static/images/ก่อสุข 4.jpg",
-                        preview_image_url=f"{BASE_URL()}/static/images/ก่อสุข 4.jpg",
+                        original_content_url=f"{BASE_URL()}/static/images/KS_4.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/KS_4.jpg",
                 ),
             ]
         )
@@ -273,8 +273,8 @@ def handle_postback(event):
         line_bot_api.push_message(
             user_id,
             ImageSendMessage(
-                        original_content_url=f"{BASE_URL()}/static/images/ก่อสุข 5.jpg",
-                        preview_image_url=f"{BASE_URL()}/static/images/ก่อสุข 5.jpg",
+                        original_content_url=f"{BASE_URL()}/static/images/KS_5.jpg",
+                        preview_image_url=f"{BASE_URL()}/static/images/KS_5.jpg",
             ),
         )
 
@@ -311,16 +311,16 @@ def handle_text(event):
             event.reply_token,
             [
                 ImageSendMessage(
-                    original_content_url=f"{BASE_URL()}/static/images/วิว 1.jpg",
-                    preview_image_url=f"{BASE_URL()}/static/images/วิว 1.jpg",
+                    original_content_url=f"{BASE_URL()}/static/images/V1.jpg",
+                    preview_image_url=f"{BASE_URL()}/static/images/V1.jpg",
                 ),
                 ImageSendMessage(
-                    original_content_url=f"{BASE_URL()}/static/images/วิว 2.jpg",
-                    preview_image_url=f"{BASE_URL()}/static/images/วิว 2.jpg",
+                    original_content_url=f"{BASE_URL()}/static/images/V2.jpg",
+                    preview_image_url=f"{BASE_URL()}/static/images/V2.jpg",
                 ),
                 ImageSendMessage(
-                    original_content_url=f"{BASE_URL()}/static/images/วิว 3.jpg",
-                    preview_image_url=f"{BASE_URL()}/static/images/วิว 3.jpg",
+                    original_content_url=f"{BASE_URL()}/static/images/V3.jpg",
+                    preview_image_url=f"{BASE_URL()}/static/images/V3.jpg",
                 ),
             ]
         )
@@ -389,21 +389,21 @@ def hotel_cards():
             room_card(
                 title='ห้องพักโซน "สุขใจ"',
                 price="550 บาท / คืน",
-                image_url=f"{BASE_URL()}/static/images/สุขใจ 2.jpg",
+                image_url=f"{BASE_URL()}/static/images/SJ_2.jpg",
                 detail_data="room_detail_sj",
                 book_data="book_room"
             ),
             room_card(
                 title='ห้องพักโซน "เติมสุข"',
                 price="590 บาท / คืน",
-                image_url=f"{BASE_URL()}/static/images/เติมสุด A 3.jpg",
+                image_url=f"{BASE_URL()}/static/images/TS_3.jpg",
                 detail_data="room_detail_ts",
                 book_data="book_room"
             ),
             room_card(
                 title="ห้อง ก่อสุข",
                 price="690 บาท / คืน",
-                image_url=f"{BASE_URL()}/static/images/ก่อสุข 4.jpg",
+                image_url=f"{BASE_URL()}/static/images/KS_4.jpg",
                 detail_data="room_detail_ks",
                 book_data="book_room"
             )
